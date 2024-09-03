@@ -1,0 +1,47 @@
+1) Brute force
+->traverse every cell
+->for o found execute functions to make all the elements of row and column set to -1.
+->time complexity- O(N*M(N+M)), space complexity- O(1)
+2) Better Approach
+->we can use 2 arrays to mark the rows and columsn having zeroes.
+->Then, traverse through the above 2 arrays and marks the cell accordinly.
+->time complexity- O(2*(N*M)) //traversing whole array twice(once while marking, then, while marknig)
+->spcae complexity -O(N) + O(M)
+
+-----Optimal Approach-------------
+1)instead of an new arrays, make use of the first row and first column for the zero row or zero column inidicator
+2)can traverse back form last cell to mark the cells to -1 accordingly.
+3)One problem: the cell at index(0,0) is common in both row and column indicator. So, can result in invalid results for example, mat[0][0] marked to indicate first column having zero value
+but in return might set the first row also to -1, since index (0,0) is part of row indicator for -1.
+4)solution: simple, for the first column value indicator we wont use mat[0][0] but an extra variable col0.
+
+Pseudo code:
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& mat) {
+        int col0=1,n=mat.size(),m=mat[0].size();
+        for(int i=0;i<n;i++){
+            int j=0;
+            if(mat[i][j]==0){
+                col0=0; //if first column has zeroes
+            }
+            for(j=1;j<m;j++){
+                if(mat[i][j]==0){
+                    mat[i][0]=mat[0][j]=0; //setting the row indicator and column idicator to zero
+                }
+            }
+        }
+        for(int i=n-1;i>=0;i--){//traversig from end, since the top values are indicators and will invalidate results if traversed from start
+            int j;
+            for(j=m-1;j>=1;j--){
+                if(mat[i][0]==0||mat[0][j]==0){
+                    mat[i][j]=0;
+                }
+            }
+            //check for column0
+            if(col0==0){
+                mat[i][0]=0;
+            }
+        }
+    }
+};
